@@ -100,3 +100,55 @@ El sistema puede utilizarse mediante:
 
 \- JOptionPane para la interfaz mediante ventanas
 
+\## Estructura del proyecto
+
+
+
+El proyecto se encuentra organizado en diferentes clases, cada una con una función específica dentro del sistema.
+
+
+
+\### Clases principales
+
+
+
+\- `personaBase`: clase abstracta que contiene los datos generales compartidos por las personas registradas, como nombre y correo electrónico.
+
+
+
+\- `Usuario`: representa a un usuario del sistema. Hereda de `personaBase` y mantiene la información de sus solicitudes asociadas.
+
+
+
+\- `Solicitud`: representa una solicitud de reparación. Contiene información como identificador, detalle, estado, tiempo de atención, valoración y usuario asociado.
+
+
+
+\- `Sistema`: controla el funcionamiento general de la aplicación, incluyendo los menús, las operaciones y las formas de interacción con el usuario.
+
+
+
+\- `archivoDatos`: se encarga de guardar y cargar la información de usuarios y solicitudes mediante archivos de texto.
+
+
+
+\### Clases de excepciones
+
+
+
+\- `UsuarioNoEncontradoException`: se utiliza cuando se intenta localizar un usuario que no se encuentra registrado.
+
+
+
+\- `SolicitudNoEncontradaException`: se utiliza cuando se intenta localizar una solicitud que no existe en el sistema.
+
+
+
+
+
+
+
+
+
+
+
