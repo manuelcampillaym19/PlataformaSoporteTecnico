@@ -1,0 +1,2 @@
+1,Teclado del equipo en mal estado,Pendiente,0,1,0,1788486075773,0
+2,Monitor no enciende,Cerrada,0,2,4,1788486195773,1788486195773
