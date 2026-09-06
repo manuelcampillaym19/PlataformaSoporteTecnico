@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
 
 /**
  * Clase principal de la plataforma de soporte.
+ *
+ * Coordina los menús, las operaciones sobre usuarios y solicitudes,
+ * y la comunicación con el mecanismo de persistencia.
  */
 public class Sistema {
 
