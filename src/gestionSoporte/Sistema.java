@@ -450,6 +450,12 @@ public class Sistema {
         );
 
         String detalle = scanner.nextLine();
+        
+        if (detalle.trim().isEmpty()){
+            System.out.println("La descripción no puede quedar vacía."
+            );
+                    
+        }
 
         solicitud.setDetalle(detalle);
 
