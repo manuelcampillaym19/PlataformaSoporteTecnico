@@ -1,154 +1,91 @@
-\# Plataforma de Gestión de Soporte Técnico
+# 📌 Proyecto Java - Plataforma de Gestión de Soporte Técnico
 
+## 🧾 Descripción
 
+- Este proyecto consiste en un sistema desarrollado en Java para gestionar usuarios y solicitudes de reparación de una empresa de soporte técnico. El sistema permite registrar usuarios, crear solicitudes, modificar y eliminar registros, finalizar solicitudes, registrar valoraciones y consultar el nivel de satisfacción.
 
-\## Descripción
+---
 
+## ⚙️ Funcionalidades
 
+- Registro y gestión de usuarios
+- Registro y administración de solicitudes de reparación
+- Búsqueda de usuarios por ID
+- Búsqueda de solicitudes por ID
+- Modificación y eliminación de usuarios
+- Modificación y eliminación de solicitudes
+- Finalización de solicitudes
+- Registro de valoraciones de satisfacción
+- Consulta del promedio de satisfacción
+- Detección de solicitudes prioritarias según tiempo pendiente
+- Persistencia de datos en archivos `.txt`
+- Interfaz mediante consola
+- Interfaz mediante ventanas gráficas (`JOptionPane`)
 
-La Plataforma de Gestión de Soporte Técnico es un sistema desarrollado en Java que permite administrar usuarios y solicitudes de reparación de dispositivos eléctricos y electrónicos.
+---
 
+## 🛠️ Tecnologías utilizadas
 
+- Java
+- Oracle JDK 11
+- NetBeans IDE
+- Programación Orientada a Objetos (POO)
+- Java Collections Framework (JCF)
+- `HashMap` y `ArrayList`
+- Manejo de archivos
+- Excepciones personalizadas
+- `JOptionPane`
 
-El sistema permite mantener organizada la información de los usuarios, asociar solicitudes de reparación y realizar un seguimiento de su estado.
+---
 
+## 📂 Estructura del proyecto
 
+- `src/gestionSoporte/` → Código fuente del sistema
+- `personaBase.java` → Clase base para personas
+- `Usuario.java` → Gestión de usuarios y solicitudes asociadas
+- `Solicitud.java` → Gestión de solicitudes de reparación
+- `archivoDatos.java` → Carga y almacenamiento de datos
+- `Sistema.java` → Menús, operaciones y coordinación del sistema
+- `UsuarioNoEncontradoException.java` → Excepción para usuarios inexistentes
+- `SolicitudNoEncontradaException.java` → Excepción para solicitudes inexistentes
+- `usuarios.txt` → Almacenamiento de usuarios
+- `solicitudes.txt` → Almacenamiento de solicitudes
 
-\## Objetivo
+---
 
+## 🚀 Cómo ejecutar
 
+1. Descargar o clonar el repositorio.
+2. Abrir el proyecto en NetBeans o en un IDE compatible con Java.
+3. Ejecutar la clase **Sistema.java**.
 
-El objetivo del proyecto es proporcionar una herramienta sencilla para registrar y administrar usuarios y solicitudes de soporte técnico, facilitando su consulta, modificación y seguimiento.
+Al iniciar el programa, se debe seleccionar el modo de uso:
 
+- **1 → Consola**
+- **2 → Ventana gráfica (`JOptionPane`)**
 
+---
 
-\## Funcionalidades principales
+## 💾 Persistencia de datos
 
+- Los usuarios y solicitudes se almacenan en archivos `.txt`.
+- Los datos existentes se cargan automáticamente al iniciar el sistema.
+- Los cambios se guardan durante las operaciones y al finalizar la ejecución.
+- Si no existen archivos de datos en la primera ejecución, el sistema carga información inicial para permitir probar las funcionalidades.
 
+---
 
-\### Gestión de usuarios
+## 📝 Notas
 
+- El sistema utiliza identificadores para localizar usuarios y solicitudes.
+- Las solicitudes se encuentran asociadas a un usuario.
+- Un usuario que posee solicitudes asociadas no puede ser eliminado.
+- Las solicitudes deben estar cerradas para poder registrar una valoración.
+- Las solicitudes prioritarias se determinan según el tiempo que llevan pendientes.
 
+---
 
-\- Registrar nuevos usuarios.
-
-\- Consultar los usuarios registrados.
-
-\- Localizar un usuario mediante su identificador.
-
-\- Modificar los datos de un usuario.
-
-\- Dar de baja un usuario cuando no posee solicitudes asociadas.
-
-
-
-\### Gestión de solicitudes
-
-
-
-\- Registrar nuevas solicitudes asociadas a un usuario.
-
-\- Consultar las solicitudes registradas.
-
-\- Localizar una solicitud mediante su identificador.
-
-\- Modificar la información de una solicitud.
-
-\- Dar de baja una solicitud.
-
-\- Finalizar solicitudes registrando su tiempo de atención.
-
-
-
-\### Satisfacción y seguimiento
-
-
-
-\- Registrar una valoración de 1 a 5 para solicitudes finalizadas.
-
-\- Consultar el promedio de satisfacción de las solicitudes valoradas.
-
-\- Detectar solicitudes pendientes que superan un tiempo de espera determinado.
-
-
-
-\### Formas de interacción
-
-
-
-El sistema puede utilizarse mediante:
-
-
-
-\- Consola.
-
-\- Ventanas gráficas mediante `JOptionPane`.
-
-
-
-\## Tecnologías utilizadas
-
-
-
-\- Java
-
-\- NetBeans
-
-\- Java Collections Framework
-
-\- Archivos de texto para persistencia
-
-\- JOptionPane para la interfaz mediante ventanas
-
-\## Estructura del proyecto
-
-
-
-El proyecto se encuentra organizado en diferentes clases, cada una con una función específica dentro del sistema.
-
-
-
-\### Clases principales
-
-
-
-\- `personaBase`: clase abstracta que contiene los datos generales compartidos por las personas registradas, como nombre y correo electrónico.
-
-
-
-\- `Usuario`: representa a un usuario del sistema. Hereda de `personaBase` y mantiene la información de sus solicitudes asociadas.
-
-
-
-\- `Solicitud`: representa una solicitud de reparación. Contiene información como identificador, detalle, estado, tiempo de atención, valoración y usuario asociado.
-
-
-
-\- `Sistema`: controla el funcionamiento general de la aplicación, incluyendo los menús, las operaciones y las formas de interacción con el usuario.
-
-
-
-\- `archivoDatos`: se encarga de guardar y cargar la información de usuarios y solicitudes mediante archivos de texto.
-
-
-
-\### Clases de excepciones
-
-
-
-\- `UsuarioNoEncontradoException`: se utiliza cuando se intenta localizar un usuario que no se encuentra registrado.
-
-
-
-\- `SolicitudNoEncontradaException`: se utiliza cuando se intenta localizar una solicitud que no existe en el sistema.
-
-
-
-
-
-
-
-
-
-
-
+## 👨‍💻 Autores
+- Gonzalo Benavente
+- Mario Saavedra
+- Manuel Campillay
