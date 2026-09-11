@@ -3,6 +3,8 @@ package gestionSoporte;
 import java.util.HashMap;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
+import java.awt.Component;
 
 /**
  * Clase principal de la plataforma de soporte.
@@ -12,10 +14,21 @@ import javax.swing.JOptionPane;
  */
 public class Sistema {
 
+    private final JFrame ventanaPrincipal;
+
     private HashMap<Integer, Usuario> usuarios;
     private Scanner scanner;
 
     public Sistema() {
+        ventanaPrincipal = new JFrame();
+        ventanaPrincipal.setAlwaysOnTop(true);
+        ventanaPrincipal.setUndecorated(true);
+        ventanaPrincipal.setSize(1, 1);
+        ventanaPrincipal.setLocationRelativeTo(null);
+        ventanaPrincipal.setOpacity(0.0f);
+        ventanaPrincipal.setVisible(true);
+        ventanaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         usuarios = archivoDatos.cargarUsuarios();
         scanner = new Scanner(System.in);
         archivoDatos.cargarSolicitudes(usuarios);
@@ -52,7 +65,7 @@ public class Sistema {
      */
     public void seleccionarModo() {
 
-        String opcion = JOptionPane.showInputDialog(
+        String opcion = mostrarInput(
                 null,
                 "======================================\n"
                 + "       PLATAFORMA DE SOPORTE\n"
@@ -72,7 +85,7 @@ public class Sistema {
                 menuVentana();
 
             } else {
-                JOptionPane.showMessageDialog(
+                mostrarMensaje(
                         null,
                         "Modalidad no válida."
                 );
@@ -80,13 +93,14 @@ public class Sistema {
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "Se produjo un error: " + e.getMessage()
             );
 
         } finally {
             guardarDatos();
+            ventanaPrincipal.dispose();
         }
     }
 
@@ -630,7 +644,7 @@ public class Sistema {
 
         do {
 
-            opcion = JOptionPane.showInputDialog(
+            opcion = mostrarInput(
                     null,
                     "======================================\n"
                     + "       PLATAFORMA DE SOPORTE\n"
@@ -722,7 +736,7 @@ public class Sistema {
                         break;
 
                     default:
-                        JOptionPane.showMessageDialog(
+                        mostrarMensaje(
                                 null,
                                 "Opción no válida."
                         );
@@ -730,21 +744,21 @@ public class Sistema {
 
             } catch (UsuarioNoEncontradoException e) {
 
-                JOptionPane.showMessageDialog(
+                mostrarMensaje(
                         null,
                         e.getMessage()
                 );
 
             } catch (SolicitudNoEncontradaException e) {
 
-                JOptionPane.showMessageDialog(
+                mostrarMensaje(
                         null,
                         e.getMessage()
                 );
 
             } catch (Exception e) {
 
-                JOptionPane.showMessageDialog(
+                mostrarMensaje(
                         null,
                         "No fue posible realizar la operación."
                 );
@@ -762,14 +776,14 @@ public class Sistema {
         try {
 
             int id = Integer.parseInt(
-                    JOptionPane.showInputDialog(
+                    mostrarInput(
                             "Identificador:"
                     )
             );
 
             if (usuarios.containsKey(id)) {
 
-                JOptionPane.showMessageDialog(
+                mostrarMensaje(
                         null,
                         "Ya existe un usuario con ese identificador."
                 );
@@ -778,12 +792,12 @@ public class Sistema {
             }
 
             String nombre =
-                    JOptionPane.showInputDialog(
+                    mostrarInput(
                             "Nombre:"
                     );
 
             String correo =
-                    JOptionPane.showInputDialog(
+                    mostrarInput(
                             "Correo electrónico:"
                     );
 
@@ -794,14 +808,14 @@ public class Sistema {
 
             guardarDatos();
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "Usuario registrado correctamente."
             );
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "Los datos ingresados no son válidos."
             );
@@ -812,7 +826,7 @@ public class Sistema {
 
         if (usuarios.isEmpty()) {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "No existen usuarios registrados."
             );
@@ -832,7 +846,7 @@ public class Sistema {
                     .append("--------------------------------------\n\n");
         }
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 texto.toString(),
                 "Usuarios registrados",
@@ -844,14 +858,14 @@ public class Sistema {
             throws UsuarioNoEncontradoException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador del usuario:"
                 )
         );
 
         Usuario usuario = buscarUsuario(id);
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 usuario.toString(),
                 "Información del usuario",
@@ -863,7 +877,7 @@ public class Sistema {
             throws UsuarioNoEncontradoException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador del usuario:"
                 )
         );
@@ -871,13 +885,13 @@ public class Sistema {
         Usuario usuario = buscarUsuario(id);
 
         String nombre =
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Nuevo nombre:",
                         usuario.getNombre()
                 );
 
         String correo =
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Nuevo correo:",
                         usuario.getCorreo()
                 );
@@ -887,7 +901,7 @@ public class Sistema {
 
         guardarDatos();
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 "Información actualizada correctamente."
         );
@@ -897,7 +911,7 @@ public class Sistema {
             throws UsuarioNoEncontradoException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador del usuario:"
                 )
         );
@@ -906,7 +920,7 @@ public class Sistema {
 
         if (!usuario.getSolicitudes().isEmpty()) {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "No se puede eliminar el usuario porque "
                     + "posee solicitudes asociadas."
@@ -919,7 +933,7 @@ public class Sistema {
 
         guardarDatos();
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 "Usuario eliminado correctamente."
         );
@@ -934,7 +948,7 @@ public class Sistema {
         try {
 
             int idUsuario = Integer.parseInt(
-                    JOptionPane.showInputDialog(
+                    mostrarInput(
                             "Identificador del usuario:"
                     )
             );
@@ -943,7 +957,7 @@ public class Sistema {
                     buscarUsuario(idUsuario);
 
             String detalle =
-                    JOptionPane.showInputDialog(
+                    mostrarInput(
                             "Descripción de la solicitud:"
                     );
 
@@ -954,14 +968,14 @@ public class Sistema {
 
             guardarDatos();
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "Solicitud registrada correctamente."
             );
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "No fue posible registrar la solicitud: "
                     + e.getMessage()
@@ -995,7 +1009,7 @@ public class Sistema {
             texto.append("No existen solicitudes registradas.");
         }
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 texto.toString(),
                 "Solicitudes registradas",
@@ -1007,7 +1021,7 @@ public class Sistema {
             throws SolicitudNoEncontradaException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador de la solicitud:"
                 )
         );
@@ -1015,7 +1029,7 @@ public class Sistema {
         Solicitud solicitud =
                 buscarSolicitud(id);
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 solicitud.toString(),
                 "Información de la solicitud",
@@ -1027,7 +1041,7 @@ public class Sistema {
             throws SolicitudNoEncontradaException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador de la solicitud:"
                 )
         );
@@ -1036,7 +1050,7 @@ public class Sistema {
                 buscarSolicitud(id);
 
         String detalle =
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Nueva descripción:",
                         solicitud.getDetalle()
                 );
@@ -1045,7 +1059,7 @@ public class Sistema {
 
         guardarDatos();
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 "Solicitud modificada correctamente."
         );
@@ -1055,7 +1069,7 @@ public class Sistema {
             throws SolicitudNoEncontradaException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador de la solicitud:"
                 )
         );
@@ -1069,7 +1083,7 @@ public class Sistema {
 
         guardarDatos();
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 "Solicitud eliminada correctamente."
         );
@@ -1083,7 +1097,7 @@ public class Sistema {
             throws SolicitudNoEncontradaException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador de la solicitud:"
                 )
         );
@@ -1095,7 +1109,7 @@ public class Sistema {
 
         guardarDatos();
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 "La solicitud fue finalizada."
         );
@@ -1105,7 +1119,7 @@ public class Sistema {
             throws SolicitudNoEncontradaException {
 
         int id = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Identificador de la solicitud:"
                 )
         );
@@ -1114,7 +1128,7 @@ public class Sistema {
                 buscarSolicitud(id);
 
         int nota = Integer.parseInt(
-                JOptionPane.showInputDialog(
+                mostrarInput(
                         "Valoración de 1 a 5:"
                 )
         );
@@ -1123,14 +1137,14 @@ public class Sistema {
 
             guardarDatos();
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "Valoración registrada correctamente."
             );
 
         } else {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "No fue posible registrar la valoración."
             );
@@ -1142,7 +1156,7 @@ public class Sistema {
         double promedio =
                 calcularPromedio();
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 "Índice promedio de satisfacción: "
                 + String.format("%.2f", promedio),
@@ -1156,7 +1170,7 @@ public class Sistema {
         try {
 
             int limite = Integer.parseInt(
-                    JOptionPane.showInputDialog(
+                    mostrarInput(
                             "Tiempo mínimo pendiente en segundos:"
                     )
             );
@@ -1165,7 +1179,7 @@ public class Sistema {
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(
+            mostrarMensaje(
                     null,
                     "Ingrese un valor numérico válido."
             );
@@ -1215,7 +1229,7 @@ public class Sistema {
             );
         }
 
-        JOptionPane.showMessageDialog(
+        mostrarMensaje(
                 null,
                 resultado.toString(),
                 "Solicitudes prioritarias",
@@ -1318,6 +1332,34 @@ public class Sistema {
         }
 
         return (double) suma / cantidad;
+    }
+
+    // =========================================================
+    // UTILIDADES PARA VENTANAS
+    // =========================================================
+
+    private String mostrarInput(Object mensaje) {
+        return JOptionPane.showInputDialog(ventanaPrincipal, mensaje);
+    }
+
+    private String mostrarInput(Component componente, Object mensaje) {
+        return JOptionPane.showInputDialog(ventanaPrincipal, mensaje);
+    }
+
+    private String mostrarInput(Object mensaje, Object valorInicial) {
+        return JOptionPane.showInputDialog(ventanaPrincipal, mensaje, valorInicial);
+    }
+
+    private void mostrarMensaje(Object mensaje) {
+        JOptionPane.showMessageDialog(ventanaPrincipal, mensaje);
+    }
+
+    private void mostrarMensaje(Component componente, Object mensaje) {
+        JOptionPane.showMessageDialog(ventanaPrincipal, mensaje);
+    }
+
+    private void mostrarMensaje(Component componente, Object mensaje, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(ventanaPrincipal, mensaje, titulo, tipo);
     }
 
     // =========================================================
