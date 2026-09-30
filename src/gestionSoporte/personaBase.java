@@ -1,7 +1,7 @@
 package gestionSoporte;
 
 /**
- * Clase base para las personas registradas en el sistema.
+ * Clase base abstracta para las personas registradas en el sistema.
  */
 public abstract class personaBase {
 
@@ -28,6 +28,11 @@ public abstract class personaBase {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    /**
+     * Cada tipo de persona define cómo mostrar su información.
+     */
+    public abstract void mostrarInformacion();
 
     @Override
     public String toString() {

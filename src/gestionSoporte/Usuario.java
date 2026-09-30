@@ -7,12 +7,14 @@ import java.util.ArrayList;
  */
 public class Usuario extends personaBase {
 
+    private static int siguienteId = 1;
+
     private int id;
     private ArrayList<Solicitud> solicitudes;
 
-    public Usuario(int id, String nombre, String correo) {
+    public Usuario(String nombre, String correo) {
         super(nombre, correo);
-        this.id = id;
+        this.id = siguienteId++;
         this.solicitudes = new ArrayList<>();
     }
 
@@ -22,39 +24,61 @@ public class Usuario extends personaBase {
 
     public void setId(int id) {
         this.id = id;
+
+        if (id >= siguienteId) {
+            siguienteId = id + 1;
+        }
     }
 
     public ArrayList<Solicitud> getSolicitudes() {
-        return solicitudes;
+        return new ArrayList<>(solicitudes);
     }
 
     public void setSolicitudes(ArrayList<Solicitud> solicitudes) {
-        this.solicitudes = solicitudes;
+        this.solicitudes = new ArrayList<>(solicitudes);
     }
 
     public void agregarSolicitud(Solicitud solicitud) {
-        solicitudes.add(solicitud);
+        if (solicitud != null && !solicitudes.contains(solicitud)) {
+            solicitudes.add(solicitud);
+        }
     }
 
-    // Sobrecarga de métodos
+    public void eliminarSolicitud(Solicitud solicitud) {
+        solicitudes.remove(solicitud);
+    }
+
+    /*
+     * Sobrecarga de métodos.
+     */
     public void mostrar() {
         System.out.println("ID: " + id);
         System.out.println("Nombre: " + getNombre());
         System.out.println("Correo: " + getCorreo());
-        System.out.println("Solicitudes: " + solicitudes.size());
-        System.out.println("--------------------------------------");
+        System.out.println("Cantidad de solicitudes: "
+                + solicitudes.size());
     }
 
+    /*
+     * Sobrecarga de métodos.
+     */
     public void mostrar(boolean detalle) {
+        mostrar();
+
         if (detalle) {
-            System.out.println("=== INFORMACIÓN DEL USUARIO ===");
-            System.out.println("ID: " + id);
-            System.out.println("Nombre: " + getNombre());
-            System.out.println("Correo: " + getCorreo());
-            System.out.println("Solicitudes asociadas: " + solicitudes.size());
-        } else {
-            mostrar();
+            for (Solicitud solicitud : solicitudes) {
+                solicitud.mostrar("  ");
+            }
         }
+    }
+
+    /*
+     * SIA-6: sobrescritura de un método heredado
+     * desde personaBase.
+     */
+    @Override
+    public void mostrarInformacion() {
+        mostrar();
     }
 
     @Override
@@ -62,6 +86,7 @@ public class Usuario extends personaBase {
         return "ID: " + id
                 + "\nNombre: " + getNombre()
                 + "\nCorreo: " + getCorreo()
-                + "\nSolicitudes: " + solicitudes.size();
+                + "\nCantidad de solicitudes: "
+                + solicitudes.size();
     }
 }

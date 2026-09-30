@@ -1,9 +1,9 @@
 package gestionSoporte;
 
 /**
- * Representa una solicitud de reparación realizada para un usuario.
+ * Representa una solicitud de atención realizada por un usuario.
  */
-public class Solicitud {
+public class Solicitud extends ElementoSoporte {
 
     private static int siguienteId = 1;
 
@@ -26,15 +26,9 @@ public class Solicitud {
         this.momentoCierre = 0;
         this.valoracion = 0;
 
-        usuario.agregarSolicitud(this);
-    }
-
-    public static int getSiguienteId() {
-        return siguienteId;
-    }
-
-    public static void setSiguienteId(int siguienteId) {
-        Solicitud.siguienteId = siguienteId;
+        if (usuario != null) {
+            usuario.agregarSolicitud(this);
+        }
     }
 
     public int getIdSolicitud() {
@@ -105,157 +99,78 @@ public class Solicitud {
         this.valoracion = valoracion;
     }
 
-    /**
-     * Finaliza la solicitud y calcula el tiempo de atención.
-     */
     public void cerrar() {
-
         if ("Pendiente".equalsIgnoreCase(estado)) {
-
             estado = "Cerrada";
-
             momentoCierre = System.currentTimeMillis();
 
-            tiempoAtencion = (int) (
-                    (momentoCierre - momentoCreacion) / 1000
-            );
+            tiempoAtencion = (int) ((momentoCierre - momentoCreacion) / 1000);
         }
     }
 
-    /**
-     * Registra una valoración entre 1 y 5.
-     *
-     * @param nota valoración entregada
-     * @return true si la valoración fue registrada correctamente
-     */
     public boolean valorar(int nota) {
+        if ("Cerrada".equalsIgnoreCase(estado)
+                && nota >= 1
+                && nota <= 5) {
 
-        if (!"Cerrada".equalsIgnoreCase(estado)) {
-            return false;
+            valoracion = nota;
+            return true;
         }
 
-        if (nota < 1 || nota > 5) {
-            return false;
-        }
-
-        valoracion = nota;
-
-        return true;
+        return false;
     }
 
-    // Sobrecarga de métodos
-
+    /*
+     * Sobrecarga de métodos:
+     * mostrar() utiliza un prefijo vacío.
+     */
     public void mostrar() {
-
-        System.out.println(
-                "Solicitud #" + idSolicitud
-        );
-
-        System.out.println(
-                "Cliente: " + usuario.getNombre()
-        );
-
-        System.out.println(
-                "Estado: " + estado
-        );
-
-        System.out.println(
-                "Detalle: " + detalle
-        );
-
-        if (valoracion > 0) {
-            System.out.println(
-                    "Valoración: " + valoracion + "/5"
-            );
-        } else {
-            System.out.println(
-                    "Valoración: Sin valorar"
-            );
-        }
-
-        System.out.println(
-                "--------------------------------------"
-        );
+        mostrar("");
     }
 
+    /*
+     * Sobrecarga de métodos:
+     * permite mostrar la solicitud utilizando un prefijo.
+     */
     public void mostrar(String prefijo) {
+        System.out.println(prefijo + "ID Solicitud: " + idSolicitud);
+        System.out.println(prefijo + "Detalle: " + detalle);
+        System.out.println(prefijo + "Estado: " + estado);
+        System.out.println(prefijo + "Tiempo de atención: "
+                + tiempoAtencion + " segundos");
+        System.out.println(prefijo + "Valoración: " + valoracion);
 
-        System.out.println(prefijo);
-
-        mostrar();
+        if (usuario != null) {
+            System.out.println(prefijo + "Usuario: "
+                    + usuario.getNombre()
+                    + " (ID: " + usuario.getId() + ")");
+        }
     }
 
-    public void mostrar(boolean detalleMostrar) {
-
-        if (detalleMostrar) {
-
-            System.out.println(
-                    "=== INFORMACIÓN DE LA SOLICITUD ==="
-            );
-
-            System.out.println(
-                    "ID: " + idSolicitud
-            );
-
-            System.out.println(
-                    "Cliente: " + usuario.getNombre()
-            );
-
-            System.out.println(
-                    "Detalle: " + detalle
-            );
-
-            System.out.println(
-                    "Estado: " + estado
-            );
-
-            System.out.println(
-                    "Tiempo de atención: "
-                    + tiempoAtencion
-                    + " segundos"
-            );
-
-            if (valoracion > 0) {
-                System.out.println(
-                        "Valoración: "
-                        + valoracion
-                        + "/5"
-                );
-            } else {
-                System.out.println(
-                        "Valoración: Sin valorar"
-                );
-            }
-
-        } else {
-
-            mostrar();
-        }
+    /*
+     * SIA-6: sobrescritura de un método heredado.
+     */
+    @Override
+    public void mostrarInformacion() {
+        mostrar();
     }
 
     @Override
     public String toString() {
+        String nombreUsuario;
 
-        String texto = "Solicitud #"
-                + idSolicitud
-                + "\nCliente: "
-                + usuario.getNombre()
-                + "\nEstado: "
-                + estado
-                + "\nDetalle: "
-                + detalle;
-
-        if (valoracion > 0) {
-
-            texto += "\nValoración: "
-                    + valoracion
-                    + "/5";
-
+        if (usuario != null) {
+            nombreUsuario = usuario.getNombre();
         } else {
-
-            texto += "\nValoración: Sin valorar";
+            nombreUsuario = "Sin usuario";
         }
 
-        return texto;
+        return "ID Solicitud: " + idSolicitud
+                + "\nDetalle: " + detalle
+                + "\nEstado: " + estado
+                + "\nTiempo de atención: "
+                + tiempoAtencion + " segundos"
+                + "\nValoración: " + valoracion
+                + "\nUsuario: " + nombreUsuario;
     }
 }

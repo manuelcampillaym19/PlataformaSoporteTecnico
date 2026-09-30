@@ -1,101 +1,124 @@
 package gestionSoporte;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
-/**
- * Gestiona el almacenamiento de usuarios y solicitudes.
- */
 public class archivoDatos {
 
     private static final String ARCHIVO_USUARIOS = "usuarios.txt";
     private static final String ARCHIVO_SOLICITUDES = "solicitudes.txt";
 
+    // =========================================================
     // GUARDAR USUARIOS
+    // =========================================================
+
     public static void guardarUsuarios(HashMap<Integer, Usuario> usuarios) {
 
-        try (BufferedWriter salida = new BufferedWriter(
+        try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter(ARCHIVO_USUARIOS))) {
 
             for (Usuario usuario : usuarios.values()) {
 
-                salida.write(
-                        usuario.getId() + ","
-                        + limpiar(usuario.getNombre()) + ","
-                        + limpiar(usuario.getCorreo())
+                String nombre = limpiar(usuario.getNombre());
+                String correo = limpiar(usuario.getCorreo());
+
+                bw.write(
+                        usuario.getId()
+                        + "," + nombre
+                        + "," + correo
                 );
 
-                salida.newLine();
+                bw.newLine();
             }
 
         } catch (IOException e) {
+
             System.out.println(
-                    "No se pudieron guardar los usuarios: "
-                    + e.getMessage());
+                    "Error al guardar usuarios: "
+                    + e.getMessage()
+            );
         }
     }
 
+    // =========================================================
     // CARGAR USUARIOS
+    // =========================================================
+
     public static HashMap<Integer, Usuario> cargarUsuarios() {
 
         HashMap<Integer, Usuario> usuarios = new HashMap<>();
+
         File archivo = new File(ARCHIVO_USUARIOS);
 
         if (!archivo.exists()) {
             return usuarios;
         }
 
-        try (BufferedReader entrada = new BufferedReader(
+        try (BufferedReader br = new BufferedReader(
                 new FileReader(archivo))) {
 
             String linea;
 
-            while ((linea = entrada.readLine()) != null) {
+            while ((linea = br.readLine()) != null) {
 
                 if (linea.trim().isEmpty()) {
                     continue;
                 }
 
-                String[] partes = linea.split(",", -1);
+                String[] datos = linea.split(",");
 
-                if (partes.length != 3) {
-                    continue;
-                }
+                if (datos.length >= 3) {
 
-                try {
+                    int id = Integer.parseInt(datos[0].trim());
+                    String nombre = datos[1].trim();
+                    String correo = datos[2].trim();
 
-                    int id = Integer.parseInt(partes[0].trim());
-                    String nombre = partes[1].trim();
-                    String correo = partes[2].trim();
+                    /*
+                     * El ID ahora se genera automáticamente
+                     * en Usuario.
+                     *
+                     * Al cargar datos antiguos, primero
+                     * creamos el usuario y después restauramos
+                     * el ID que estaba guardado.
+                     */
+                    Usuario usuario = new Usuario(
+                            nombre,
+                            correo
+                    );
 
-                    Usuario usuario =
-                            new Usuario(id, nombre, correo);
+                    usuario.setId(id);
 
-                    usuarios.put(id, usuario);
-
-                } catch (NumberFormatException e) {
-
-                    System.out.println(
-                            "Registro de usuario inválido: "
-                            + linea);
+                    usuarios.put(
+                            usuario.getId(),
+                            usuario
+                    );
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
 
             System.out.println(
-                    "No se pudieron cargar los usuarios: "
-                    + e.getMessage());
+                    "Error al cargar usuarios: "
+                    + e.getMessage()
+            );
         }
 
         return usuarios;
     }
 
+    // =========================================================
     // GUARDAR SOLICITUDES
+    // =========================================================
+
     public static void guardarSolicitudes(
             HashMap<Integer, Usuario> usuarios) {
 
-        try (BufferedWriter salida = new BufferedWriter(
+        try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter(ARCHIVO_SOLICITUDES))) {
 
             for (Usuario usuario : usuarios.values()) {
@@ -103,30 +126,34 @@ public class archivoDatos {
                 for (Solicitud solicitud
                         : usuario.getSolicitudes()) {
 
-                    salida.write(
-                            solicitud.getIdSolicitud() + ","
-                            + limpiar(solicitud.getDetalle()) + ","
-                            + limpiar(solicitud.getEstado()) + ","
-                            + solicitud.getTiempoAtencion() + ","
-                            + usuario.getId() + ","
-                            + solicitud.getValoracion() + ","
-                            + solicitud.getMomentoCreacion() + ","
-                            + solicitud.getMomentoCierre()
+                    bw.write(
+                            solicitud.getIdSolicitud()
+                            + "," + limpiar(solicitud.getDetalle())
+                            + "," + limpiar(solicitud.getEstado())
+                            + "," + solicitud.getTiempoAtencion()
+                            + "," + usuario.getId()
+                            + "," + solicitud.getValoracion()
+                            + "," + solicitud.getMomentoCreacion()
+                            + "," + solicitud.getMomentoCierre()
                     );
 
-                    salida.newLine();
+                    bw.newLine();
                 }
             }
 
         } catch (IOException e) {
 
             System.out.println(
-                    "No se pudieron guardar las solicitudes: "
-                    + e.getMessage());
+                    "Error al guardar solicitudes: "
+                    + e.getMessage()
+            );
         }
     }
 
+    // =========================================================
     // CARGAR SOLICITUDES
+    // =========================================================
+
     public static void cargarSolicitudes(
             HashMap<Integer, Usuario> usuarios) {
 
@@ -136,80 +163,108 @@ public class archivoDatos {
             return;
         }
 
-        try (BufferedReader entrada = new BufferedReader(
+        try (BufferedReader br = new BufferedReader(
                 new FileReader(archivo))) {
 
             String linea;
 
-            while ((linea = entrada.readLine()) != null) {
+            while ((linea = br.readLine()) != null) {
 
                 if (linea.trim().isEmpty()) {
                     continue;
                 }
 
-                String[] partes = linea.split(",", -1);
+                String[] datos = linea.split(",");
 
-                if (partes.length != 8) {
-                    continue;
-                }
+                if (datos.length >= 8) {
 
-                try {
+                    int idSolicitud =
+                            Integer.parseInt(datos[0].trim());
 
-                    int id = Integer.parseInt(partes[0].trim());
-                    String detalle = partes[1].trim();
-                    String estado = partes[2].trim();
-                    int tiempo = Integer.parseInt(partes[3].trim());
-                    int idUsuario = Integer.parseInt(partes[4].trim());
-                    int valoracion = Integer.parseInt(partes[5].trim());
-                    long creacion = Long.parseLong(partes[6].trim());
-                    long cierre = Long.parseLong(partes[7].trim());
+                    String detalle = datos[1].trim();
+
+                    String estado = datos[2].trim();
+
+                    int tiempoAtencion =
+                            Integer.parseInt(datos[3].trim());
+
+                    int idUsuario =
+                            Integer.parseInt(datos[4].trim());
+
+                    int valoracion =
+                            Integer.parseInt(datos[5].trim());
+
+                    long momentoCreacion =
+                            Long.parseLong(datos[6].trim());
+
+                    long momentoCierre =
+                            Long.parseLong(datos[7].trim());
 
                     Usuario usuario = usuarios.get(idUsuario);
 
                     if (usuario != null) {
 
                         Solicitud solicitud =
-                                new Solicitud(detalle, usuario);
+                                new Solicitud(
+                                        detalle,
+                                        usuario
+                                );
 
-                        solicitud.setIdSolicitud(id);
+                        /*
+                         * Restauramos los datos guardados.
+                         */
+                        solicitud.setIdSolicitud(idSolicitud);
                         solicitud.setEstado(estado);
-                        solicitud.setTiempoAtencion(tiempo);
-                        solicitud.setValoracion(valoracion);
-                        solicitud.setMomentoCreacion(creacion);
-                        solicitud.setMomentoCierre(cierre);
+                        solicitud.setTiempoAtencion(
+                                tiempoAtencion
+                        );
+                        solicitud.setValoracion(
+                                valoracion
+                        );
+                        solicitud.setMomentoCreacion(
+                                momentoCreacion
+                        );
+                        solicitud.setMomentoCierre(
+                                momentoCierre
+                        );
                     }
-
-                } catch (NumberFormatException e) {
-
-                    System.out.println(
-                            "Registro de solicitud inválido: "
-                            + linea);
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
 
             System.out.println(
-                    "No se pudieron cargar las solicitudes: "
-                    + e.getMessage());
+                    "Error al cargar solicitudes: "
+                    + e.getMessage()
+            );
         }
     }
 
-    // Evita problemas si alguien escribe una coma en un dato.
+    // =========================================================
+    // LIMPIAR TEXTO
+    // =========================================================
+
     private static String limpiar(String texto) {
-        return texto.replace(",", " ");
+
+        if (texto == null) {
+            return "";
+        }
+
+        return texto
+                .replace(",", " ")
+                .replace("\n", " ")
+                .replace("\r", " ");
     }
 
-    /**
-     * Comprueba si existen archivos de datos almacenados.
-     *
-     * @return true si existe al menos uno de los archivos de datos
-     */
+    // =========================================================
+    // COMPROBAR ARCHIVOS
+    // =========================================================
+
     public static boolean existenArchivosDeDatos() {
 
         File usuarios = new File(ARCHIVO_USUARIOS);
         File solicitudes = new File(ARCHIVO_SOLICITUDES);
 
-        return usuarios.exists() || solicitudes.exists();
+        return usuarios.exists() && solicitudes.exists();
     }
 }
