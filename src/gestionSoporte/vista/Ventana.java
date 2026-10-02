@@ -1,5 +1,10 @@
-package gestionSoporte;
+package gestionSoporte.vista;
 
+import gestionSoporte.excepciones.SolicitudNoEncontradaException;
+import gestionSoporte.excepciones.UsuarioNoEncontradoException;
+import gestionSoporte.gestor.Gestor;
+import gestionSoporte.modelo.Usuario;
+import gestionSoporte.modelo.Solicitud;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -552,6 +557,7 @@ public class Ventana {
                 "Dar de baja solicitud",
                 "Finalizar solicitud",
                 "Registrar valoración",
+                "Registrar seguimiento",
                 "Volver"
             };
 
@@ -597,6 +603,10 @@ public class Ventana {
                     break;
 
                 case 7:
+                    registrarSeguimiento();
+                    break;
+
+                case 8:
                 case JOptionPane.CLOSED_OPTION:
                     continuar = false;
                     break;
@@ -793,6 +803,100 @@ public class Ventana {
                     ventanaPrincipal,
                     solicitud.toString(),
                     "Solicitud encontrada",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (SolicitudNoEncontradaException e) {
+
+            JOptionPane.showMessageDialog(
+                    ventanaPrincipal,
+                    e.getMessage(),
+                    "Solicitud no encontrada",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    // =========================================================
+    // REGISTRAR SEGUIMIENTO
+    // =========================================================
+
+    private void registrarSeguimiento() {
+
+        Integer id = pedirEntero(
+                "Ingrese el ID de la solicitud:"
+        );
+
+        if (id == null) {
+            return;
+        }
+
+        try {
+
+            gestor.buscarSolicitud(id);
+
+            String descripcion =
+                    JOptionPane.showInputDialog(
+                            ventanaPrincipal,
+                            "Ingrese la descripción del seguimiento:",
+                            "Registrar seguimiento",
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+
+            if (descripcion == null) {
+                return;
+            }
+
+            descripcion = descripcion.trim();
+
+            if (descripcion.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        ventanaPrincipal,
+                        "La descripción no puede estar vacía.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+                return;
+            }
+
+            String fecha =
+                    JOptionPane.showInputDialog(
+                            ventanaPrincipal,
+                            "Ingrese la fecha del seguimiento:",
+                            "Registrar seguimiento",
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+
+            if (fecha == null) {
+                return;
+            }
+
+            fecha = fecha.trim();
+
+            if (fecha.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        ventanaPrincipal,
+                        "La fecha no puede estar vacía.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+                return;
+            }
+
+            gestor.agregarSeguimiento(
+                    id,
+                    descripcion,
+                    fecha
+            );
+
+            JOptionPane.showMessageDialog(
+                    ventanaPrincipal,
+                    "Seguimiento registrado correctamente.",
+                    "Registro exitoso",
                     JOptionPane.INFORMATION_MESSAGE
             );
 

@@ -1,5 +1,11 @@
-package gestionSoporte;
+package gestionSoporte.gestor;
 
+import gestionSoporte.excepciones.SolicitudNoEncontradaException;
+import gestionSoporte.excepciones.UsuarioNoEncontradoException;
+import gestionSoporte.persistencia.archivoDatos;
+import gestionSoporte.modelo.Seguimiento;
+import gestionSoporte.modelo.Usuario;
+import gestionSoporte.modelo.Solicitud;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +32,9 @@ public class Gestor {
         this.usuarios = new HashMap<>(usuarios);
     }
 
-    // =========================================================
+    // =========================
     // USUARIOS
-    // =========================================================
+    // =========================
 
     public boolean agregarUsuario(String nombre, String correo) {
 
@@ -90,12 +96,19 @@ public class Gestor {
     }
 
     public List<Usuario> listarUsuarios() {
-        return new ArrayList<>(usuarios.values());
+
+        List<Usuario> lista =
+                new ArrayList<>(usuarios.values());
+
+        lista.sort((u1, u2) ->
+                Integer.compare(u1.getId(), u2.getId()));
+
+        return lista;
     }
 
-    // =========================================================
-    // VALIDACIÓN DE CORREO
-    // =========================================================
+    // =========================
+    // VALIDACIÓN
+    // =========================
 
     public boolean correoValido(String correo) {
 
@@ -108,9 +121,9 @@ public class Gestor {
         );
     }
 
-    // =========================================================
+    // =========================
     // SOLICITUDES
-    // =========================================================
+    // =========================
 
     public boolean agregarSolicitud(
             int idUsuario,
@@ -119,10 +132,8 @@ public class Gestor {
 
         Usuario usuario = buscarUsuario(idUsuario);
 
-        Solicitud solicitud = new Solicitud(
-                detalle,
-                usuario
-        );
+        Solicitud solicitud =
+                new Solicitud(detalle, usuario);
 
         return solicitud != null;
     }
@@ -132,7 +143,8 @@ public class Gestor {
 
         for (Usuario usuario : usuarios.values()) {
 
-            for (Solicitud solicitud : usuario.getSolicitudes()) {
+            for (Solicitud solicitud :
+                    usuario.getSolicitudes()) {
 
                 if (solicitud.getIdSolicitud() == idSolicitud) {
                     return solicitud;
@@ -151,7 +163,8 @@ public class Gestor {
             String detalle)
             throws SolicitudNoEncontradaException {
 
-        Solicitud solicitud = buscarSolicitud(idSolicitud);
+        Solicitud solicitud =
+                buscarSolicitud(idSolicitud);
 
         solicitud.setDetalle(detalle);
 
@@ -161,7 +174,8 @@ public class Gestor {
     public boolean eliminarSolicitud(int idSolicitud)
             throws SolicitudNoEncontradaException {
 
-        Solicitud solicitud = buscarSolicitud(idSolicitud);
+        Solicitud solicitud =
+                buscarSolicitud(idSolicitud);
 
         Usuario usuario = solicitud.getUsuario();
 
@@ -174,23 +188,28 @@ public class Gestor {
 
     public List<Solicitud> listarSolicitudes() {
 
-        List<Solicitud> solicitudes = new ArrayList<>();
+        List<Solicitud> solicitudes =
+                new ArrayList<>();
 
         for (Usuario usuario : usuarios.values()) {
-            solicitudes.addAll(usuario.getSolicitudes());
+
+            solicitudes.addAll(
+                    usuario.getSolicitudes()
+            );
         }
 
         return solicitudes;
     }
 
-    // =========================================================
-    // OPERACIONES SOBRE SOLICITUDES
-    // =========================================================
+    // =========================
+    // OPERACIONES
+    // =========================
 
     public boolean finalizarSolicitud(int idSolicitud)
             throws SolicitudNoEncontradaException {
 
-        Solicitud solicitud = buscarSolicitud(idSolicitud);
+        Solicitud solicitud =
+                buscarSolicitud(idSolicitud);
 
         if (!"Pendiente".equalsIgnoreCase(
                 solicitud.getEstado())) {
@@ -208,9 +227,31 @@ public class Gestor {
             int nota)
             throws SolicitudNoEncontradaException {
 
-        Solicitud solicitud = buscarSolicitud(idSolicitud);
+        Solicitud solicitud =
+                buscarSolicitud(idSolicitud);
 
         return solicitud.valorar(nota);
+    }
+
+    /*
+     * Agrega un seguimiento al historial
+     * de una solicitud.
+     */
+    public boolean agregarSeguimiento(
+            int idSolicitud,
+            String descripcion,
+            String fecha)
+            throws SolicitudNoEncontradaException {
+
+        Solicitud solicitud =
+                buscarSolicitud(idSolicitud);
+
+        Seguimiento seguimiento =
+                new Seguimiento(descripcion, fecha);
+
+        solicitud.agregarSeguimiento(seguimiento);
+
+        return true;
     }
 
     public double calcularPromedio() {
@@ -220,7 +261,8 @@ public class Gestor {
 
         for (Usuario usuario : usuarios.values()) {
 
-            for (Solicitud solicitud : usuario.getSolicitudes()) {
+            for (Solicitud solicitud :
+                    usuario.getSolicitudes()) {
 
                 if (solicitud.getValoracion() > 0) {
 
@@ -239,11 +281,13 @@ public class Gestor {
 
     public List<Solicitud> obtenerSolicitudesPrioritarias() {
 
-        List<Solicitud> prioritarias = new ArrayList<>();
+        List<Solicitud> prioritarias =
+                new ArrayList<>();
 
         for (Usuario usuario : usuarios.values()) {
 
-            for (Solicitud solicitud : usuario.getSolicitudes()) {
+            for (Solicitud solicitud :
+                    usuario.getSolicitudes()) {
 
                 if ("Pendiente".equalsIgnoreCase(
                         solicitud.getEstado())
@@ -257,9 +301,9 @@ public class Gestor {
         return prioritarias;
     }
 
-    // =========================================================
+    // =========================
     // PERSISTENCIA
-    // =========================================================
+    // =========================
 
     public void guardarDatos() {
 
@@ -267,50 +311,57 @@ public class Gestor {
         archivoDatos.guardarSolicitudes(usuarios);
     }
 
-    // =========================================================
+    // =========================
     // DATOS INICIALES
-    // =========================================================
+    // =========================
 
     private void cargarDatosIniciales() {
 
-        Usuario juan = new Usuario(
-                "Juan Perez",
-                "juan.perez@gmail.com"
-        );
+        Usuario juan =
+                new Usuario(
+                        "Juan Perez",
+                        "juan.perez@gmail.com"
+                );
 
-        Usuario pedro = new Usuario(
-                "Pedro Soto",
-                "pedro.soto@gmail.com"
-        );
+        Usuario pedro =
+                new Usuario(
+                        "Pedro Soto",
+                        "pedro.soto@gmail.com"
+                );
 
-        Usuario ana = new Usuario(
-                "Ana Morales",
-                "ana.morales@gmail.com"
-        );
+        Usuario ana =
+                new Usuario(
+                        "Ana Morales",
+                        "ana.morales@gmail.com"
+                );
 
         usuarios.put(juan.getId(), juan);
         usuarios.put(pedro.getId(), pedro);
         usuarios.put(ana.getId(), ana);
 
-        Solicitud solicitud1 = new Solicitud(
-                "Teclado del equipo en mal estado",
-                juan
-        );
+        Solicitud solicitud1 =
+                new Solicitud(
+                        "Teclado del equipo en mal estado",
+                        juan
+                );
 
-        Solicitud solicitud2 = new Solicitud(
-                "Monitor no enciende",
-                pedro
-        );
+        Solicitud solicitud2 =
+                new Solicitud(
+                        "Monitor no enciende",
+                        pedro
+                );
 
         solicitud2.setEstado("Cerrada");
         solicitud2.setValoracion(4);
 
-        Solicitud solicitud3 = new Solicitud(
-                "Equipo presenta lentitud",
-                ana
-        );
+        Solicitud solicitud3 =
+                new Solicitud(
+                        "Equipo presenta lentitud",
+                        ana
+                );
 
         if (solicitud1 == null || solicitud3 == null) {
+
             System.out.println(
                     "Error al crear datos iniciales."
             );

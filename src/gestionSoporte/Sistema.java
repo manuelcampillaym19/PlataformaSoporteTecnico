@@ -1,5 +1,8 @@
 package gestionSoporte;
 
+import gestionSoporte.vista.Ventana;
+import gestionSoporte.vista.Consola;
+import gestionSoporte.gestor.Gestor;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 

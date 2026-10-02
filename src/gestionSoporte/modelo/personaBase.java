@@ -1,4 +1,4 @@
-package gestionSoporte;
+package gestionSoporte.modelo;
 
 /**
  * Clase base abstracta para las personas registradas en el sistema.

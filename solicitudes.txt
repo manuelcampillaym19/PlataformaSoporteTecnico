@@ -1,3 +1,3 @@
-1,Teclado del equipo en mal estado,Pendiente,0,1,0,1790741676212,0
-2,Monitor no enciende,Cerrada,0,2,4,1790741676212,0
-3,Equipo presenta lentitud,Pendiente,0,3,0,1790741676212,0
+1,Teclado del equipo en mal estado,Cerrada,223051,1,5,1790741676212,1790964728106,3,T�cnico revis� teclado,30/09/2026,Seguimiento prueba,01/10/2026,Hola,0
+2,Monitor no enciende,Cerrada,0,2,4,1790741676212,0,0
+3,Equipo presenta lentitud,Pendiente,0,3,0,1790741676212,0,0

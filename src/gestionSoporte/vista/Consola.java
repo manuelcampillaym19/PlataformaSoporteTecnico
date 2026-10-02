@@ -1,5 +1,10 @@
-package gestionSoporte;
+package gestionSoporte.vista;
 
+import gestionSoporte.excepciones.SolicitudNoEncontradaException;
+import gestionSoporte.excepciones.UsuarioNoEncontradoException;
+import gestionSoporte.gestor.Gestor;
+import gestionSoporte.modelo.Usuario;
+import gestionSoporte.modelo.Solicitud;
 import java.util.List;
 import java.util.Scanner;
 
@@ -291,7 +296,7 @@ public class Consola {
 
             System.out.println();
 
-            usuario.mostrar(true);
+            usuario.mostrarInformacion();
 
         } catch (UsuarioNoEncontradoException e) {
 
@@ -462,6 +467,7 @@ public class Consola {
             System.out.println("5. Dar de baja solicitud");
             System.out.println("6. Finalizar solicitud");
             System.out.println("7. Registrar valoración");
+            System.out.println("8. Registrar seguimiento");
             System.out.println("0. Volver");
             System.out.println("--------------------------------------");
 
@@ -495,6 +501,10 @@ public class Consola {
 
                 case 7:
                     registrarValoracion();
+                    break;
+
+                case 8:
+                    registrarSeguimiento();
                     break;
 
                 case 0:
@@ -653,7 +663,7 @@ public class Consola {
 
             System.out.println();
 
-            solicitud.mostrar();
+            solicitud.mostrarInformacion();
 
         } catch (SolicitudNoEncontradaException e) {
 
@@ -859,6 +869,68 @@ public class Consola {
     }
 
     // =========================================================
+    // REGISTRAR SEGUIMIENTO
+    // =========================================================
+
+    private void registrarSeguimiento() {
+
+        System.out.println();
+        System.out.println(
+                "--- REGISTRAR SEGUIMIENTO ---"
+        );
+
+        int id = leerEntero(
+                "ID de la solicitud: "
+        );
+
+        try {
+
+            gestor.buscarSolicitud(id);
+
+            System.out.print(
+                    "Descripción del seguimiento: "
+            );
+
+            String descripcion =
+                    scanner.nextLine();
+
+            System.out.print(
+                    "Fecha del seguimiento: "
+            );
+
+            String fecha =
+                    scanner.nextLine();
+
+            boolean registrado =
+                    gestor.agregarSeguimiento(
+                            id,
+                            descripcion,
+                            fecha
+                    );
+
+            if (registrado) {
+
+                System.out.println();
+                System.out.println(
+                        "Seguimiento registrado correctamente."
+                );
+
+            } else {
+
+                System.out.println(
+                        "No fue posible registrar el seguimiento."
+                );
+            }
+
+        } catch (SolicitudNoEncontradaException e) {
+
+            System.out.println(
+                    e.getMessage()
+            );
+        }
+    }
+
+    // =========================================================
     // MENÚ REPORTES
     // =========================================================
 
@@ -950,7 +1022,7 @@ public class Consola {
 
             System.out.println();
 
-            solicitud.mostrar();
+            solicitud.mostrarInformacion();
 
             System.out.println(
                     "--------------------------------------"

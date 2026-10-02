@@ -1,4 +1,4 @@
-package gestionSoporte;
+package gestionSoporte.excepciones;
 
 /**
  * Excepción utilizada cuando no se encuentra un usuario.

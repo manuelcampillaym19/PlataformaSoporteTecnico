@@ -1,4 +1,4 @@
-package gestionSoporte;
+package gestionSoporte.modelo;
 
 /**
  * Clase base para los elementos que forman parte del sistema de soporte.
