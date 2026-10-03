@@ -289,10 +289,18 @@ public class Gestor {
             for (Solicitud solicitud :
                     usuario.getSolicitudes()) {
 
-                if ("Pendiente".equalsIgnoreCase(
-                        solicitud.getEstado())
-                        && solicitud.getTiempoAtencion() >= 180) {
+                long tiempoActual =
+                        solicitud.getTiempoAtencion();
 
+                if ("Pendiente".equalsIgnoreCase(
+                        solicitud.getEstado())) {
+
+                    tiempoActual =
+                            (System.currentTimeMillis()
+                            - solicitud.getMomentoCreacion()) / 1000;
+                }
+
+                if (tiempoActual >= 180) {
                     prioritarias.add(solicitud);
                 }
             }
@@ -344,6 +352,12 @@ public class Gestor {
                         "Teclado del equipo en mal estado",
                         juan
                 );
+
+        // Se establece una antigüedad superior a 180 segundos
+        // para disponer de una solicitud prioritaria desde el inicio.
+        solicitud1.setMomentoCreacion(
+                System.currentTimeMillis() - 181000
+        );
 
         Solicitud solicitud2 =
                 new Solicitud(
